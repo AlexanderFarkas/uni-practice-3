@@ -1,0 +1,62 @@
+<div class="form">
+    <div class="form-input">
+        <label>
+            Что нужно сделать?
+            <input id="todo-name" type="text"/>
+        </label>
+        <div id="todo-name-error" class="form-input-error"></div>
+    </div>
+    <button onclick="onSubmit()">ДОБАВИТЬ</button>
+</div>
+
+<div class="todos-block">
+    <h2>Задачи</h2>
+    {{#each todos}}
+        <div class="todo {{#if this.resolved_at}} todo-finished {{/if}}">
+            <div>
+                <p class="todo-name">{{this.name}}</p>
+                {{#if this.resolved_at}}
+                    <p>Завершен: {{formatDate this.resolved_at}}</p>
+                {{else}}
+                    <p>Создан: {{formatDate this.created_at}}</p>
+                {{/if}}
+            </div>
+
+            <button class="todo-finish-button" onclick="resolveTodo({{this.id}})">
+                ЗАВЕРШИТЬ
+            </button>
+        </div>
+    {{else}}
+        <p>Пока что у вас нет задач. <i>Создайте</i> одну!</p>
+    {{/each}}
+</div>
+<script>
+    async function onSubmit() {
+        const input = document.getElementById("todo-name")
+        const error = document.getElementById("todo-name-error");
+        const name = input.value;
+        if (name.length < 3) {
+            error.innerText = "Минимум 3 символа";
+            return;
+        } else {
+            error.innerText = "";
+        }
+
+        await fetch("/todo", {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name})
+        });
+        location.reload();
+    }
+
+    async function resolveTodo(id) {
+        await fetch(`/todo/${id}/resolve`, {
+            method: "POST"
+        });
+        location.reload();
+    }
+</script>
