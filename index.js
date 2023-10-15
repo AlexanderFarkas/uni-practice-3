@@ -28,7 +28,6 @@ const todos = {};
 
 app.get('/', (req, res) => {
     const todoArray = Array.from(Object.values(todos));
-    // resolved sort last, then sort by created_at desc
     const sorted = todoArray.sort((a, b) => {
         if (a.resolved_at && b.resolved_at) {
             return new Date(b.resolved_at) - new Date(a.resolved_at);
@@ -61,13 +60,6 @@ app.post('/todo', (req, res) => {
 app.post('/todo/:id/resolve', (req, res) => {
     const {id} = req.params;
     todos[id].resolved_at = new Date().toISOString();
-    res.status(200).json({id: id});
-});
-
-app.post('/todo/:id/priority', (req, res) => {
-    const {id} = req.params;
-    const {priority} = req.body;
-    todos[id].priority = priority;
     res.status(200).json({id: id});
 });
 
