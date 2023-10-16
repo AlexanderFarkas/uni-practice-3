@@ -2,6 +2,9 @@
   "name": "uni-practice-3",
   "version": "1.0.0",
   "type": "module",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "express": "^4.18.2",
     "express-handlebars": "^7.1.2"
